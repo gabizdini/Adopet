@@ -66,16 +66,18 @@ public class CompaniesController extends HttpServlet{
 	private void listCompanies(HttpServletRequest req) {
 		CompanyDAO dao = DAOFactory.createDAO(CompanyDAO.class);
 		
-		List<Company> companies = null;
 		try {
-			companies = dao.listAll();
+			int total = dao.count();
+			int page = ControllerUtil.currentPage(req, total);
+			
+			List<Company> companies = dao.listAll(ControllerUtil.PAGE_SIZE, ControllerUtil.offset(page));
+			
+			req.setAttribute("companies", companies);
+			ControllerUtil.setPagination(req, page, total, "/companies");
 		} catch (ModelException e) {
 			// Log no servidor
 			e.printStackTrace();
 		}
-		
-		if (companies != null)
-			req.setAttribute("companies", companies);
 	}
 
 	@Override
@@ -128,11 +130,11 @@ public class CompaniesController extends HttpServlet{
 		
 		try {
 			if (dao.update(company)) {
-				ControllerUtil.sucessMessage(req, "Empresa '" + 
+				ControllerUtil.sucessMessage(req, "Associação '" + 
 						company.getName() + "' atualizada com sucesso.");
 			}
 			else {
-				ControllerUtil.errorMessage(req, "Empresa '" + 
+				ControllerUtil.errorMessage(req, "Associação '" + 
 						company.getName() + "' não pode ser atualizada.");
 			}				
 		} catch (ModelException e) {
@@ -153,16 +155,16 @@ public class CompaniesController extends HttpServlet{
 			Company company = dao.findById(companyId);
 			
 			if (company == null)
-				throw new ModelException("Empresa não encontrada para deleção.");
+				throw new ModelException("Associação não encontrada para exclusão.");
 			
 			if (dao.delete(company)) {
-				ControllerUtil.sucessMessage(req, "Empresa '" + 
-						company.getName() + "' deletada com sucesso.");
+				ControllerUtil.sucessMessage(req, "Associação '" + 
+						company.getName() + "' excluída com sucesso.");
 			}
 			else {
-				ControllerUtil.errorMessage(req, "Empresa '" + 
-						company.getName() + "' não pode ser deletado. "
-								+ "Há dados relacionados à empresa.");
+				ControllerUtil.errorMessage(req, "Associação '" + 
+						company.getName() + "' não pode ser excluída. "
+								+ "Há abrigos vinculados a ela.");
 			}
 		} catch (ModelException e) {
 			// log no servidor
@@ -193,11 +195,11 @@ public class CompaniesController extends HttpServlet{
 	
 		try {
 			if (dao.save(comp)) {
-				ControllerUtil.sucessMessage(req, "Empresa '" + comp.getName() 
+				ControllerUtil.sucessMessage(req, "Associação '" + comp.getName() 
 				+ "' salva com sucesso.");
 			}
 			else {
-				ControllerUtil.errorMessage(req, "Empresa '" + comp.getName()
+				ControllerUtil.errorMessage(req, "Associação '" + comp.getName()
 				+ "' não pode ser salva.");
 			}
 		} catch (ModelException e) {

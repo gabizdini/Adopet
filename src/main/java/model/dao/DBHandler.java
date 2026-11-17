@@ -73,6 +73,28 @@ public class DBHandler {
 		}
 	}
 
+	public void setDouble(int i, double value) throws ModelException {
+		validatePreparedStatement();
+
+		try {
+			preparedStatement.setDouble(i, value);
+		} catch (SQLException e) {
+			close();
+			throw new ModelException("Erro ao atribuir double", e);
+		}
+	}
+
+	public void setBoolean(int i, boolean value) throws ModelException {
+		validatePreparedStatement();
+
+		try {
+			preparedStatement.setBoolean(i, value);
+		} catch (SQLException e) {
+			close();
+			throw new ModelException("Erro ao atribuir boolean", e);
+		}
+	}
+
 	public int executeUpdate() throws ModelException  {
 		validatePreparedStatement();
 		
@@ -144,6 +166,24 @@ public class DBHandler {
 		}
 	}
 	
+	public double getDouble(String column) throws ModelException {
+		try {
+			return resultSet.getDouble(column);
+		} catch (SQLException e) {
+			close();
+			throw new ModelException("Erro ao chamar getDouble", e);
+		}
+	}
+
+	public boolean getBoolean(String column) throws ModelException {
+		try {
+			return resultSet.getBoolean(column);
+		} catch (SQLException e) {
+			close();
+			throw new ModelException("Erro ao chamar getBoolean", e);
+		}
+	}
+
 	public Date getDate(String column) throws ModelException {
 		try {
 			return resultSet.getDate(column);

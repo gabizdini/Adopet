@@ -10,7 +10,7 @@
 	<%@include file="nav-menu.jsp"%>
 	
 	<div id="container" class="container-fluid">
-		<h3 class="page-header">${not empty company ? 'Atualizar' : 'Adicionar'} Empresa</h3>
+		<h3 class="page-header">${not empty company ? 'Atualizar' : 'Adicionar'} Associação</h3>
 		
 		<form action="${pageContext.request.contextPath}/company/${action}" 
 			method="POST">
@@ -21,19 +21,19 @@
 				<div class="form-group col-md-6">
 					<label for="name">Nome</label>
 					<input type="text" class="form-control" id="name" name="name" 
-						   autofocus="autofocus" placeholder="Nome Empresa" 
+						   autofocus="autofocus" placeholder="Nome da associação" 
 						   required 
-						   oninvalid="this.setCustomValidity('Por favor, informe o nome da empresa.')"
+						   oninvalid="this.setCustomValidity('Por favor, informe o nome da associação.')"
 						   oninput="setCustomValidity('')"
 						   value="${company.getName()}" />
 				</div>
 				
 				<div class="form-group col-md-6">
-					<label for="role">Cargo</label>
+					<label for="role">Função do responsável</label>
 					<input type="text" class="form-control" id="role" name="role" 
-						   autofocus="autofocus" placeholder="Cargo ocupado" 
+						   autofocus="autofocus" placeholder="Ex.: Presidente, Tesoureira" 
 						   required 
-						   oninvalid="this.setCustomValidity('Por favor, informe o cargo.')"
+						   oninvalid="this.setCustomValidity('Por favor, informe a função.')"
 						   oninput="setCustomValidity('')" 
 						   value="${company.getRole()}"/>
 				</div>				
@@ -41,7 +41,7 @@
 			
 			<div class="row">
 				<div class="form-group col-md-4">
-					<label for="start">Data início</label>
+					<label for="start">Início do vínculo</label>
 					<input type="date" class="form-control" id="start" name="start" 
 						   autofocus="autofocus" placeholder="Data de início" 
 						   required 
@@ -51,16 +51,16 @@
 				</div>
 				
 				<div class="form-group col-md-4">
-					<label for="end">Data saída</label>
+					<label for="end">Fim do vínculo</label>
 					<input type="date" class="form-control" id="end" name="end" 
 						   autofocus="autofocus" placeholder="Data de saída"				    
-						   oninvalid="this.setCustomValidity('Por favor, informe a data de saída')"
+						   oninvalid="this.setCustomValidity('Por favor, informe a data de fim do vínculo')"
 						   oninput="setCustomValidity('')"
 						   value="${company.getEnd()}"/>
 				</div>
 				
 				<div class="form-group col-md-4">
-					<label for="user">Usuário</label>
+					<label for="user">Responsável</label>
 					<select id="user" class="form-control selectpicker" name="user" 
 						    required oninvalid="this.setCustomValidity('Por favor, informe o usuário.')"
 						    oninput="setCustomValidity('')">
@@ -89,12 +89,14 @@
 					   class="btn btn-default">Cancelar</a>
 					
 					<button type="submit" 
-						    class="btn btn-primary">${not empty company ? 'Atulizar' : 'Cadastrar' } Empresa</button>
+						    class="btn btn-primary">${not empty company ? 'Atualizar' : 'Cadastrar' } Associação</button>
 				</div>
 			</div>
 		</form>
 		
 	</div>
 
+	<script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -9,21 +9,25 @@
 		    <span class="icon-bar"></span>
 		   </button>
 			<a class="navbar-brand" href="${pageContext.request.contextPath}">
-		    	<span><img height="30px" width="30px" alt="PM" src="${pageContext.request.contextPath}/images/logo.png"><strong>Adopet</strong></strong></span>
+		    	<span><img height="30px" width="30px" alt="PM" src="${pageContext.request.contextPath}/images/logo.png"><strong>Adopet</strong></span>
 		    </a>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="${pageContext.request.contextPath}"><span class="glyphicon glyphicon-home" /><strong>&nbspInício</strong></a></li>
-				<li><a href="${pageContext.request.contextPath}/users"><span class="glyphicon glyphicon-user" /><strong>&nbspUsuários</strong></a></li>
-				<li><a href="${pageContext.request.contextPath}"><span class="glyphicon glyphicon-pencil" /><strong>&nbspPosts</strong></a></li>
-				<li><a href="${pageContext.request.contextPath}/companies"><span class="glyphicon glyphicon-pushpin" /><strong>&nbspEmpresas</strong></a></li>
+				<li><a href="${pageContext.request.contextPath}"><span class="glyphicon glyphicon-home"></span><strong>&nbsp;Início</strong></a></li>
+				<li><a href="${pageContext.request.contextPath}/users"><span class="glyphicon glyphicon-user"></span><strong>&nbsp;Usuários</strong></a></li>
+				<li><a href="${pageContext.request.contextPath}/posts"><span class="glyphicon glyphicon-pencil"></span><strong>&nbsp;Posts</strong></a></li>
+				<li><a href="${pageContext.request.contextPath}/companies"><span class="glyphicon glyphicon-pushpin"></span><strong>&nbsp;Associações</strong></a></li>
+				<li><a href="${pageContext.request.contextPath}/abrigos"><span class="glyphicon glyphicon-tower"></span><strong>&nbsp;Abrigos</strong></a></li>
+				<li><a href="${pageContext.request.contextPath}/animais"><span class="glyphicon glyphicon-heart"></span><strong>&nbsp;Animais</strong></a></li>
 				<li class="dropdown">
-			        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><strong>Perfil</strong>
-			        <span class="caret"></span></a>
+			        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			        	<span class="glyphicon glyphicon-user"></span>
+			        	<strong>&nbsp;${sessionScope.loggedUser.getName()}</strong>
+			        	<span class="caret"></span>
+			        </a>
 			        <ul class="dropdown-menu">
-			          <li><a href="#"><span class="glyphicon glyphicon-cog" /></span>&nbspDados cadastrais</a></li>
-			          <li><a href="#"><span class="glyphicon glyphicon-log-out" /></span>&nbspSair</a></li>
+			          <li><a href="${pageContext.request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sair</a></li>
 			        </ul>
 			    </li>
 			</ul>

@@ -9,7 +9,7 @@
 		<%@include file="nav-menu.jsp"%>
 			
 		<div id="container" class="container-fluid">
-			<h3 class="page-header">Adicionar Usuário</h3>
+			<h3 class="page-header">${not empty user ? 'Alterar' : 'Adicionar'} Usuário</h3>
 
 			<form action="${pageContext.request.contextPath}/user/${action}" method="POST">
 				<input type="hidden" value="${user.getId()}" name="userId">
@@ -43,6 +43,17 @@
 							   value="${user.getEmail()}">
 					</div>
 				</div>
+				<div class="row">
+					<div class="form-group col-md-4">
+						<label for="password">Senha</label>
+						<input type="password" class="form-control" id="password" name="password"
+							   minlength="6"
+							   placeholder="${not empty user ? 'Deixe em branco para manter a atual' : 'Mínimo de 6 caracteres'}"
+							   ${not empty user ? '' : 'required'}
+							   oninvalid="this.setCustomValidity('Por favor, informe uma senha com ao menos 6 caracteres.')"
+							   oninput="setCustomValidity('')">
+					</div>
+				</div>
 				<hr />
 				<div id="actions" class="row pull-right">
 					<div class="col-md-12">
@@ -53,7 +64,7 @@
 			</form>
 		</div>
 
-		<script src="js/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	</body>
 </html>

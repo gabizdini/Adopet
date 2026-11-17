@@ -52,6 +52,8 @@ public class ControllerUtil {
 	}
 
 	public static Date formatDate(String stringDate) {
+		if (stringDate == null || stringDate.isBlank())
+			return null;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -60,5 +62,48 @@ public class ControllerUtil {
 		} catch (ParseException e) {
 			return null;
 		}
+	}
+
+	// ------------------------------------------------------------------
+	// Paginação
+	// ------------------------------------------------------------------
+
+	/** Quantidade de registros exibidos por página em todas as listagens. */
+	static final int PAGE_SIZE = 5;
+
+	/**
+	 * Lê o parâmetro "page" da URL (ex.: /users?page=2), garantindo que
+	 * fique entre 1 e o total de páginas.
+	 */
+	static int currentPage(HttpServletRequest req, int totalItems) {
+		int page = 1;
+
+		try {
+			page = Integer.parseInt(req.getParameter("page"));
+		} catch (NumberFormatException e) {
+			// parâmetro ausente ou inválido: fica na página 1
+		}
+
+		return Math.max(1, Math.min(page, totalPages(totalItems)));
+	}
+
+	static int offset(int page) {
+		return (page - 1) * PAGE_SIZE;
+	}
+
+	static int totalPages(int totalItems) {
+		return Math.max(1, (int) Math.ceil(totalItems / (double) PAGE_SIZE));
+	}
+
+	/**
+	 * Envia para a JSP os dados usados pelo fragmento pagination.jsp.
+	 *
+	 * @param path caminho da listagem sem o contexto (ex.: "/users")
+	 */
+	static void setPagination(HttpServletRequest req, int page, int totalItems, String path) {
+		req.setAttribute("currentPage", page);
+		req.setAttribute("totalPages", totalPages(totalItems));
+		req.setAttribute("totalItems", totalItems);
+		req.setAttribute("paginationUrl", req.getContextPath() + path);
 	}
 }

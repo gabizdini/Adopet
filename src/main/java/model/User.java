@@ -5,7 +5,8 @@ public class User {
 	private String name;
 	private String gender;
 	private String email;
-	
+	private String password; // hash SHA-256
+
 	public User() {
 		this(0);
 	}
@@ -39,6 +40,14 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public int getId() {

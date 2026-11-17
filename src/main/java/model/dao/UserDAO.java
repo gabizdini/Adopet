@@ -10,5 +10,8 @@ public interface UserDAO {
 	boolean update(User user) throws ModelException;
 	boolean delete(User user) throws ModelException;
 	List<User> listAll() throws ModelException;
+	List<User> listAll(int limit, int offset) throws ModelException;
+	int count() throws ModelException;
 	User findById(int id) throws ModelException;
+	User findByEmail(String email) throws ModelException;
 }

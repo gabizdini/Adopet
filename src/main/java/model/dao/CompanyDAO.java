@@ -10,5 +10,7 @@ public interface CompanyDAO {
 	boolean update(Company company) throws ModelException;
 	boolean delete(Company company) throws ModelException;
 	List<Company> listAll() throws ModelException;
+	List<Company> listAll(int limit, int offset) throws ModelException;
+	int count() throws ModelException;
 	Company findById(int id) throws ModelException;
 }

@@ -4,7 +4,7 @@
 <html>
 <head>
 	<%@include file="base-head.jsp"%>
-	<title>CRUD Manager - Empresas</title>
+	<title>Adopet - Associações</title>
 </head>
 <body>
 	<%@include file="modal.html"%>
@@ -18,12 +18,12 @@
 		
 		<div id="top" class="row">
  			<div class="col-md-3">
-		        <h3>Empresas</h3>
+		        <h3>Associações</h3>
 		    </div>
 		 
 		    <div class="col-md-6">
 		        <div class="input-group h2">
-		            <input name="data[search]" class="form-control" id="search" type="text" placeholder="Pesquisar empresas">
+		            <input name="data[search]" class="form-control" id="search" type="text" placeholder="Pesquisar associações">
 		            <span class="input-group-btn">
 		                <button class="btn btn-danger" type="submit">
 		                    <span class="glyphicon glyphicon-search"></span>
@@ -33,7 +33,7 @@
 		    </div>
 		 
 		    <div class="col-md-3">
-		        <a href="/Adopet/company/form" class="btn btn-danger pull-right h2"><span class="glyphicon glyphicon-plus" /></span>Adicionar Empresa</a>
+		        <a href="${pageContext.request.contextPath}/company/form" class="btn btn-danger pull-right h2"><span class="glyphicon glyphicon-plus" /></span>&nbsp;Adicionar Associação</a>
 		    </div>
      	</div>
      	
@@ -45,10 +45,10 @@
 		            <thead>
 		                <tr>
 		                    <th>Nome</th>
-		                    <th>Cargo</th>
+		                    <th>Função</th>
 		                    <th>Início</th>
-		                    <th>Saída</th>
-		                    <th>Usuário</th>
+		                    <th>Fim</th>
+		                    <th>Responsável</th>
 		                    <th>Editar</th>
 		                    <th>Excluir</th>
 		                 </tr>
@@ -83,21 +83,11 @@
 		 
 		     </div>
      	</div>
-     	<div id="bottom" class="row">
-     		<div class="col-md-12">
-		        <ul class="pagination">
-		            <li class="disabled"><a>&lt; Anterior</a></li>
-		            <li class="disabled"><a>1</a></li>
-		            <li><a href="#">2</a></li>
-		            <li><a href="#">3</a></li>
-		            <li class="next"><a href="#" rel="next">Próximo &gt;</a></li>
-		        </ul><!-- /.pagination -->
-		    </div>
-     	</div>
+     	<%@include file="pagination.jsp"%>
 	</div>
 	
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 		    // fecha o alert após 3 segundos
@@ -110,7 +100,7 @@
 		    $(".modal-remove").click(function () {
 	            var companyName = $(this).attr('company-name');
 	            var companyId = $(this).attr('company-id');
-	            $(".modal-body #hiddenValue").text("a empresa '"+companyName+"'");
+	            $(".modal-body #hiddenValue").text("a associação '"+companyName+"'");
 	            $("#id").attr( "value", companyId);
 	            $("#form").attr( "action","company/delete");
 	        })

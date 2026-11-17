@@ -181,15 +181,17 @@ public class PostsController extends HttpServlet {
 	private void listPosts(HttpServletRequest req) {
 		PostDAO dao = DAOFactory.createDAO(PostDAO.class);
 		
-		List<Post> posts = null;
 		try {
-			posts = dao.listAll();
+			int total = dao.count();
+			int page = ControllerUtil.currentPage(req, total);
+
+			List<Post> posts = dao.listAll(ControllerUtil.PAGE_SIZE, ControllerUtil.offset(page));
+
+			req.setAttribute("posts", posts);
+			ControllerUtil.setPagination(req, page, total, "/posts");
 		} catch (ModelException e) {
 			// Log no servidor
 			e.printStackTrace();
 		}
-		
-		if (posts != null)
-			req.setAttribute("posts", posts);
 	}
 }

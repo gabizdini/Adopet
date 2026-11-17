@@ -1,5 +1,6 @@
 package model.dao;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,10 +68,18 @@ public class MySQLCompanyDAO implements CompanyDAO {
 		String sqlDelete = " DELETE FROM companies "
 		         + " WHERE id = ?;";
 
-		db.prepareStatement(sqlDelete);		
+		db.prepareStatement(sqlDelete);
 		db.setInt(1, company.getId());
-		
-		return db.executeUpdate() > 0;
+
+		try {
+			return db.executeUpdate() > 0;
+		} catch (ModelException e) {
+			// Há abrigos vinculados a esta associação
+			if (e.getCause() instanceof SQLIntegrityConstraintViolationException)
+				return false;
+
+			throw e;
+		}
 	}
 
 	@Override
@@ -80,32 +89,68 @@ public class MySQLCompanyDAO implements CompanyDAO {
 		List<Company> companies = new ArrayList<Company>();
 			
 		// Declara uma instrução SQL
-		String sqlQuery = " SELECT c.id as 'company_id', c.*, u.* \n"
-				+ " FROM companies c \n"
-				+ " INNER JOIN users u \n"
-				+ " ON c.user_id = u.id;";
-		
+		String sqlQuery = SELECT_WITH_USER + ";";
+
 		db.createStatement();
-	
+
 		db.executeQuery(sqlQuery);
 
 		while (db.next()) {
-			User user = new User(db.getInt("user_id"));
-			user.setName(db.getString("nome"));
-			user.setGender(db.getString("sexo"));
-			user.setEmail(db.getString("email"));
-			
-			Company company = new Company(db.getInt("company_id"));
-			company.setName(db.getString("name"));
-			company.setRole(db.getString("role"));
-			company.setStart(db.getDate("start"));
-			company.setEnd(db.getDate("end"));
-			company.setUser(user);
-			
-			companies.add(company);
+			companies.add(createCompanyWithUser(db));
 		}
-		
+
 		return companies;
+	}
+
+	@Override
+	public List<Company> listAll(int limit, int offset) throws ModelException {
+		DBHandler db = new DBHandler();
+
+		List<Company> companies = new ArrayList<Company>();
+
+		db.prepareStatement(SELECT_WITH_USER + " LIMIT ? OFFSET ?;");
+		db.setInt(1, limit);
+		db.setInt(2, offset);
+		db.executeQuery();
+
+		while (db.next()) {
+			companies.add(createCompanyWithUser(db));
+		}
+
+		return companies;
+	}
+
+	@Override
+	public int count() throws ModelException {
+		DBHandler db = new DBHandler();
+
+		db.createStatement();
+		db.executeQuery("SELECT COUNT(*) AS total FROM companies");
+
+		return db.next() ? db.getInt("total") : 0;
+	}
+
+	private static final String SELECT_WITH_USER =
+			  " SELECT c.id as 'company_id', c.*, u.* \n"
+			+ " FROM companies c \n"
+			+ " INNER JOIN users u \n"
+			+ " ON c.user_id = u.id \n"
+			+ " ORDER BY c.name ";
+
+	private Company createCompanyWithUser(DBHandler db) throws ModelException {
+		User user = new User(db.getInt("user_id"));
+		user.setName(db.getString("nome"));
+		user.setGender(db.getString("sexo"));
+		user.setEmail(db.getString("email"));
+
+		Company company = new Company(db.getInt("company_id"));
+		company.setName(db.getString("name"));
+		company.setRole(db.getString("role"));
+		company.setStart(db.getDate("start"));
+		company.setEnd(db.getDate("end"));
+		company.setUser(user);
+
+		return company;
 	}
 
 	@Override

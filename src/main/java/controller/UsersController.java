@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelException;
+import model.PasswordUtil;
 import model.User;
 import model.dao.DAOFactory;
 import model.dao.UserDAO;
@@ -40,8 +41,8 @@ public class UsersController extends HttpServlet {
 			break;
 		}
 		default:
-			listUsers(req);
-			
+			listUsersPaginated(req);
+
 			ControllerUtil.transferSessionMessagesToRequest(req);
 		
 			ControllerUtil.forward(req, resp, "/users.jsp");
@@ -114,17 +115,36 @@ public class UsersController extends HttpServlet {
 		if (users != null)
 			req.setAttribute("users", users);
 	}
-	
+
+	private void listUsersPaginated(HttpServletRequest req) {
+		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
+
+		try {
+			int total = dao.count();
+			int page = ControllerUtil.currentPage(req, total);
+
+			List<User> users = dao.listAll(ControllerUtil.PAGE_SIZE, ControllerUtil.offset(page));
+
+			req.setAttribute("users", users);
+			ControllerUtil.setPagination(req, page, total, "/users");
+		} catch (ModelException e) {
+			// Log no servidor
+			e.printStackTrace();
+		}
+	}
+
 	private void insertUser(HttpServletRequest req, HttpServletResponse resp) {
 		String userName = req.getParameter("name");
 		String userGender = req.getParameter("gender");
 		String userEMail = req.getParameter("mail");
-		
+		String password = req.getParameter("password");
+
 		User user = new User();
 		user.setName(userName);
 		user.setGender(userGender);
 		user.setEmail(userEMail);
-		
+		user.setPassword(PasswordUtil.hash(password));
+
 		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
 		
 		try {
@@ -146,12 +166,17 @@ public class UsersController extends HttpServlet {
 		String userName = req.getParameter("name");
 		String userGender = req.getParameter("gender");
 		String userEMail = req.getParameter("mail");
-		
+		String password = req.getParameter("password");
+
 		User user = loadUser(req);
 		user.setName(userName);
 		user.setGender(userGender);
 		user.setEmail(userEMail);
-		
+
+		// Senha em branco na edição = mantém a senha atual
+		if (password != null && !password.isBlank())
+			user.setPassword(PasswordUtil.hash(password));
+
 		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
 		
 		try {

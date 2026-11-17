@@ -10,5 +10,7 @@ public interface PostDAO {
 	boolean update(Post post) throws ModelException;
 	boolean delete(Post post) throws ModelException;
 	List<Post> listAll() throws ModelException;
+	List<Post> listAll(int limit, int offset) throws ModelException;
+	int count() throws ModelException;
 	Post findById(int id) throws ModelException;
 }
