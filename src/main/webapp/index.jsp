@@ -1,103 +1,38 @@
 <jsp:directive.page contentType="text/html; charset=UTF-8" />
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%--
+	Página inicial: apenas navegação, sem dados do banco.
+	Não precisa de controller: é aberta pelo Tomcat como welcome-file (web.xml).
+	O AuthFilter (/*) continua exigindo login para acessá-la.
+--%>
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
 		<%@include file="base-head.jsp"%>
 	</head>
 	<body>
-		<%@include file="modal.html"%>
 		<%@include file="nav-menu.jsp"%>
-					
-		<div id="container" class="container-fluid">
-			<div id="alert" style="${not empty message ? 'display: block;' : 'display: none;'}" class="alert alert-dismissable ${alertType eq 1 ? 'alert-success' : 'alert-danger'}">
-			  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-			  ${message}
+
+		<div id="container" class="container-fluid text-center">
+			<h3 class="page-header">Bem-vindo(a), ${sessionScope.loggedUser.getName()}!</h3>
+			<p class="lead">Escolha uma área para gerenciar:</p>
+
+			<div class="row">
+				<div class="col-md-12">
+					<a href="${pageContext.request.contextPath}/users" class="btn btn-default btn-lg">
+						<span class="glyphicon glyphicon-user"></span>&nbsp;Usuários</a>
+					<a href="${pageContext.request.contextPath}/posts" class="btn btn-default btn-lg">
+						<span class="glyphicon glyphicon-pencil"></span>&nbsp;Posts</a>
+					<a href="${pageContext.request.contextPath}/companies" class="btn btn-default btn-lg">
+						<span class="glyphicon glyphicon-pushpin"></span>&nbsp;Associações</a>
+					<a href="${pageContext.request.contextPath}/abrigos" class="btn btn-primary btn-lg">
+						<span class="glyphicon glyphicon-tower"></span>&nbsp;Abrigos</a>
+					<a href="${pageContext.request.contextPath}/animais" class="btn btn-primary btn-lg">
+						<span class="glyphicon glyphicon-heart"></span>&nbsp;Animais</a>
+				</div>
 			</div>
-		
-	 	 	<div id="top" class="row">
-	 			<div class="col-md-3">
-			        <h3>Posts</h3>
-			    </div>
-			 
-			    <div class="col-md-6">
-			        <div class="input-group h2">
-			            <input name="data[search]" class="form-control" id="search" type="text" placeholder="Pesquisar posts">
-			            <span class="input-group-btn">
-			                <button class="btn btn-danger" type="submit">
-			                    <span class="glyphicon glyphicon-search"></span>
-			                </button>
-			            </span>
-			        </div>
-			    </div>
-			 
-			    <div class="col-md-3">
-			        <a href="${pageContext.request.contextPath}/post/form" class="btn btn-danger pull-right h2"><span class="glyphicon glyphicon-plus" /></span>&nbspAdicionar Post</a>
-			    </div>
-	     	</div>
-	 
-	     	<hr />
-	     	
-	     	<div id="list" class="row">
-	     		<div class="table-responsive col-md-12">
-			        <table class="table table-striped table-hover" cellspacing="0" cellpadding="0">
-			            <thead>
-			                <tr>
-			                    <th>Data</th>
-			                    <th>Conteúdo</th>
-			                    <th>Usuário</th>
-			                    <th>Editar</th>
-			                    <th>Excluir</th>
-			                 </tr>
-			            </thead>
-			            <tbody>
-			            	<c:forEach var="post" items="${posts}">
-								<tr>
-				                    <td>${post.getPostDate()}</td>
-				                    <td>${post.getContent()}</td>
-				                    <td>${post.getUser().getName()}</td>				                    
-				                    <td class="actions">
-				                        <a class="btn btn-info btn-xs" 
-				                           href="${pageContext.request.contextPath}/post/update?postId=${post.getId()}" >
-				                           <span class="glyphicon glyphicon-edit"></span>
-				                        </a>
-				                    </td>
-				                    <td class="actions">
-				                        <a class="btn btn-danger btn-xs modal-remove" post-id="${post.getId()}" 
-				                           post-content="${post.getContent()}" data-toggle="modal" 
-				                           data-target="#delete-modal"  href="#"><span 
-				                           class="glyphicon glyphicon-trash"></span></a>
-				                    </td>
-				                </tr>
-							</c:forEach>
-			            </tbody>
-			         </table>
-			 
-			     </div>
-	     	</div>
-	 
-	     	<%@include file="pagination.jsp"%>
 		</div>
-		
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function() {
-			    // fecha o alert após 3 segundos
-			    setTimeout(function() {
-			        $("#alert").slideUp(500);
-			    }, 3000);
-			    
-			    // ao clicar no delete de algum post, pega o nome do usuário, 
-			    // o id do usuário e a ação (delete) e envia para o modal 
-			    $(".modal-remove").click(function () {
-		            var postContent = $(this).attr('post-content');
-		            var postId = $(this).attr('post-id');
-		            $(".modal-body #hiddenValue").text("o post '"+postContent+"'");
-		            $("#id").attr( "value", postId);
-		            $("#form").attr( "action","post/delete");
-		        })
-			});
-		</script>
+
+		<script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	</body>
 </html>
